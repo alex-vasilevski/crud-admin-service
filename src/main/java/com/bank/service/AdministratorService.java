@@ -39,14 +39,14 @@ public class AdministratorService implements CrudService<Administrator, Long> {
     public Optional<Administrator> update(Long id, Administrator sourceDto) {
         Optional<AdministratorEntity> target = repository.findById(id);
         AdministratorEntity source = transformer.toEntity(sourceDto);
-        target.ifPresent();
-        return Optional.empty();
+        return Optional.of(transformer.toDto(update(source, target.get())));
     }
 
-    private void update(AdministratorEntity source, AdministratorEntity target){
+    private AdministratorEntity update(AdministratorEntity source, AdministratorEntity target){
         target.setName(source.getName());
         target.setLastName(source.getLastName());
         target.setRights(source.getRights());
+        return target;
     }
 
     @Override
