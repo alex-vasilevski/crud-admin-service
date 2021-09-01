@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Deprecated
 public class CurrencyService implements CrudService<Currency, Long> {
 
     @Autowired

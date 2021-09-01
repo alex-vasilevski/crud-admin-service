@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Deprecated
 public class TotalService implements CrudService<Total, Long> {
 
     @Autowired
