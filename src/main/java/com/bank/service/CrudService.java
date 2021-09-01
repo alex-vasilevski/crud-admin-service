@@ -9,6 +9,6 @@ public interface CrudService<Dto, Id>{
     void create(Dto dto);
     Optional<Dto> findById(Id id);
     Iterable<Dto> findAll();
-    Optional<Dto> update(Id id, Dto source);
+    Optional<Dto> update(Id id, Dto sourceDto);
     void deleteById(Id id);
 }
