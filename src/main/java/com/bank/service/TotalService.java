@@ -30,7 +30,6 @@ public class TotalService implements CrudService<Total, Long> {
         return repository.findById(id).map(transformer::toDto);
     }
 
-
     @Override
     public Iterable<Total> findAll() {
         List<TotalEntity> list = new ArrayList<>();

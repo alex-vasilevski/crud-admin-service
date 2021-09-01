@@ -24,6 +24,7 @@ public class OperationMetaAggregatorEntity {
     private LocalDate operationStartTime;
     private LocalDate operationEndTime;
     private AccountEntity targetAccountEntity;
+    private TotalEntity totalEntity;
     private AccountEntity sourceAccountEntity;
     private Set<Right> usedRights;
     private OperatorEntity operatorEntity;
@@ -31,16 +32,17 @@ public class OperationMetaAggregatorEntity {
 
     public OperationMetaAggregatorEntity(String operationName, LocalDate operationStartTime,
                                          LocalDate operationEndTime, AccountEntity targetAccountEntity,
-                                         AccountEntity sourceAccountEntity, Set<Right> usedRights,
-                                         OperatorEntity operatorEntity, OperationStatus operationStatus) {
+                                         TotalEntity totalEntity, AccountEntity sourceAccountEntity,
+                                         Set<Right> usedRights, OperatorEntity operatorEntity,
+                                         OperationStatus operationStatus) {
         this.operationName = operationName;
         this.operationStartTime = operationStartTime;
         this.operationEndTime = operationEndTime;
         this.targetAccountEntity = targetAccountEntity;
+        this.totalEntity = totalEntity;
         this.sourceAccountEntity = sourceAccountEntity;
         this.usedRights = usedRights;
         this.operatorEntity = operatorEntity;
         this.operationStatus = operationStatus;
     }
-
 }
