@@ -1,6 +1,5 @@
 package com.bank.domain.operators;
 
-
 import com.bank.policy.rights.Right;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

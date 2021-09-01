@@ -37,9 +37,10 @@ public class AdministratorService implements CrudService<Administrator, Long> {
 
     @Override
     public Optional<Administrator> update(Long id, Administrator sourceDto) {
-        Optional<AdministratorEntity> target = repository.findById(id);
+        Optional<AdministratorEntity> optional = repository.findById(id);
         AdministratorEntity source = transformer.toEntity(sourceDto);
-        return Optional.of(transformer.toDto(update(source, target.get())));
+        optional.ifPresent(target -> update(source, target));
+        return optional.map(transformer::toDto);
     }
 
     private AdministratorEntity update(AdministratorEntity source, AdministratorEntity target){
@@ -50,7 +51,7 @@ public class AdministratorService implements CrudService<Administrator, Long> {
     }
 
     @Override
-    public void deleteById(Long aLong) {
-
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 }
