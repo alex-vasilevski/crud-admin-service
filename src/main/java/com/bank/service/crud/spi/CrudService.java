@@ -1,4 +1,4 @@
-package com.bank.service;
+package com.bank.service.crud.spi;
 
 import org.springframework.http.ResponseEntity;
 
