@@ -27,13 +27,15 @@ public class EmployeeServiceImpl {
 
     public Page<Employee> findAll() {
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE);
+
         return repository.findAll(pageable);
     }
 
     public Page<Employee> findAllAndSort(String direction, List<String> sortParams) {
         String[] params = new String[sortParams.size()];
         sortParams.toArray(params);
-        Pageable pageable = PageRequest.of(0, PAGE_SIZE, Sort.Direction.valueOf(direction), params);
+        Sort sort = Sort.by(Sort.Direction.valueOf(direction), params);
+        Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
         return repository.findAll(pageable);
     }
 
@@ -46,16 +48,10 @@ public class EmployeeServiceImpl {
     public Page<Employee> findAllMatchingAndSort(Employee employee, String direction, List<String> sortParams){
         String[] params = new String[sortParams.size()];
         sortParams.toArray(params);
-        Sort.sort(Employee.class).
-        Pageable pageable = PageRequest.of(0, PAGE_SIZE, Sort.Direction.valueOf(direction), params);
+        Sort sort = Sort.by(Sort.Direction.valueOf(direction), params);
+        Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
         return repository.findAll(Example.of(employee), pageable);
     }
-
-
-    public Optional<Employee> findAnyMatching(Employee employee){
-        return repository.findOne(Example.of(employee));
-    }
-
 
     public Optional<Employee> update(Long id, Employee sourceDto) {
         Optional<Employee> optional = repository.findById(id);
@@ -69,8 +65,8 @@ public class EmployeeServiceImpl {
         return target;
     }
 
-
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
 }

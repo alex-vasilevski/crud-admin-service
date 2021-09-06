@@ -71,8 +71,8 @@ public class EmployeeController{
                                                                  @RequestParam(name = "age") Integer age,
                                                                  @RequestParam(name = "salary") Double salary,
                                                                  @RequestParam (name = "role") Role role,
-                                                                 @RequestParam(name = "direction") @NonNull String direction,
-                                                                 @RequestParam(name = "sort_param") @NonNull List<String> sortParams) {
+                                                                 @RequestParam(name = "direction") @NotNull String direction,
+                                                                 @RequestParam(name = "sort_param") @NotNull List<String> sortParams) {
         return ResponseEntity.ok(service.findAllMatchingAndSort(new Employee(name, lastName, birthDay, age, salary, role), direction, sortParams));
     }
 
