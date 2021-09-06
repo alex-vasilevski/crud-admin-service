@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -26,9 +25,12 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Employee(String name, String lastName, Role role) {
+    public Employee(String name, String lastName, LocalDate birthDay, Integer age, Double salary, Role role) {
         this.name = name;
         this.lastName = lastName;
+        this.birthDay = birthDay;
+        this.age = age;
+        this.salary = salary;
         this.role = role;
     }
 }
