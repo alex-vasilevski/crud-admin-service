@@ -5,23 +5,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
-public class Administrator {
+public class Employee {
 
     @Id
     private Long id;
     private String name;
     private String lastName;
+    private LocalDate birthDay;
+    private Integer age;
+    private Double salary;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    public Administrator(String name, String lastName) {
+    public Employee(String name, String lastName, Role role) {
         this.name = name;
         this.lastName = lastName;
+        this.role = role;
     }
 }
