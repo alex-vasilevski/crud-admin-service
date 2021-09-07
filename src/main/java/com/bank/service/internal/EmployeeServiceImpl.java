@@ -8,10 +8,13 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.MapBindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
 import java.util.*;
 import java.util.stream.Stream;
+
+import static org.apache.logging.log4j.ThreadContext.isEmpty;
 
 @Service
 public class EmployeeServiceImpl {
@@ -31,8 +34,9 @@ public class EmployeeServiceImpl {
         Stream<Validator> supportedValidators = validators.stream().filter(validator -> validator.supports(Employee.class));
         supportedValidators.forEach(validator -> validator.validate(employee, errors));
 
-        if(!errors.getAllErrors().isEmpty()){
-            String message = errors.getAllErrors().get(0).getCode();
+        List<ObjectError> errorList = errors.getAllErrors();
+        if(!errorList.isEmpty()){
+            String message = errorList.get(0).getCode();
             throw new CreateEmployeeException(message);
         }
         repository.save(employee);

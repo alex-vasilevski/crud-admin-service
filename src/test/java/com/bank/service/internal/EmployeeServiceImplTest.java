@@ -7,7 +7,6 @@ import com.bank.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,7 +23,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,7 +47,7 @@ public class EmployeeServiceImplTest {
     private Set<Validator> validators;
 
     @InjectMocks
-    EmployeeServiceImpl service;
+    private EmployeeServiceImpl service;
 
     @Test
     public void shouldCreateEmployee(){
