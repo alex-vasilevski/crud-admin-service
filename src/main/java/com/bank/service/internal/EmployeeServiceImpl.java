@@ -1,23 +1,40 @@
 package com.bank.service.internal;
 
 import com.bank.domain.Employee;
+import com.bank.exception.CreateEmployeeException;
 import com.bank.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.MapBindingResult;
+import org.springframework.validation.Validator;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 public class EmployeeServiceImpl {
 
     private static final int PAGE_SIZE = 10;
+    private static final String DEFAULT_SORT_PARAMETER = "id";
+    private static final String DEFAULT_SORT_DIRECTION = Sort.Direction.ASC.toString();
 
     @Autowired
     private EmployeeRepository repository;
 
-    public void create(Employee employee) {
+    @Autowired
+    private Set<Validator> validators;
+
+    public void create(Employee employee) throws CreateEmployeeException {
+        Errors errors = new MapBindingResult(new HashMap<>(), "employee");
+        Stream<Validator> supportedValidators = validators.stream().filter(validator -> validator.supports(Employee.class));
+        supportedValidators.forEach(validator -> validator.validate(employee, errors));
+
+        if(!errors.getAllErrors().isEmpty()){
+            String message = errors.getAllErrors().get(0).getCode();
+            throw new CreateEmployeeException(message);
+        }
         repository.save(employee);
     }
 
@@ -25,29 +42,16 @@ public class EmployeeServiceImpl {
         return repository.findById(id);
     }
 
-    public Page<Employee> findAll() {
-        Pageable pageable = PageRequest.ofSize(PAGE_SIZE);
+    public Page<Employee> findAllMatchingAndSort(Employee employee, String direction, Set<String> sortParams){
 
-        return repository.findAll(pageable);
-    }
+        if (direction == null){
+            direction = DEFAULT_SORT_DIRECTION;
+        }
+        if(sortParams == null){
+            sortParams = Collections.singleton(DEFAULT_SORT_PARAMETER);
+        }
+        String[] params = sortParams.toArray(new String[0]);
 
-    public Page<Employee> findAllAndSort(String direction, List<String> sortParams) {
-        String[] params = new String[sortParams.size()];
-        sortParams.toArray(params);
-        Sort sort = Sort.by(Sort.Direction.valueOf(direction), params);
-        Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
-        return repository.findAll(pageable);
-    }
-
-    public Page<Employee> findAllMatching(Employee employee) {
-        Pageable pageable = PageRequest.ofSize(PAGE_SIZE);
-        return repository.findAll(Example.of(employee), pageable);
-    }
-
-
-    public Page<Employee> findAllMatchingAndSort(Employee employee, String direction, List<String> sortParams){
-        String[] params = new String[sortParams.size()];
-        sortParams.toArray(params);
         Sort sort = Sort.by(Sort.Direction.valueOf(direction), params);
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
         return repository.findAll(Example.of(employee), pageable);
@@ -62,6 +66,9 @@ public class EmployeeServiceImpl {
     private Employee update(Employee source, Employee target){
         target.setName(source.getName());
         target.setLastName(source.getLastName());
+        target.setAge(source.getAge());
+        target.setBirthDay(source.getBirthDay());
+        target.setSalary(source.getSalary());
         return target;
     }
 
