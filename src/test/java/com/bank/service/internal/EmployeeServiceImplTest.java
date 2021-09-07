@@ -6,18 +6,18 @@ import com.bank.exception.CreateEmployeeException;
 import com.bank.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 import org.springframework.validation.Validator;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.print.attribute.standard.MediaSize;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceImplTest {
@@ -74,12 +74,28 @@ public class EmployeeServiceImplTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public void shouldFindAllMatchingEmployeesAndSortByDefaultWithDefaultDirection(){
+    @ParameterizedTest
+    @MethodSource("searchCriteriaCases")
+    public void shouldFindAllMatchingEmployeesAndSortByDefaultWithDefaultDirection(Employee searchCriteria){
         Sort sort = Sort.by(Sort.Direction.valueOf(DEFAULT_SORT_DIRECTION), DEFAULT_SORT_PARAMETER);
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
-        Page<Employee> page = new PageImpl<Employee>((List.of(defaultEntityEmployee())));
-        when(repository.findAll(Example.of(defaultDtoEmployee()), pageable)).thenReturn(page);
+        Page<Employee> expected = new PageImpl<Employee>((List.of(defaultEntityEmployee())));
+        when(repository.findAll(Example.of(searchCriteria), pageable)).thenReturn(expected);
+
+        Page<Employee> actual = service.findAllMatchingAndSort(searchCriteria, DEFAULT_SORT_DIRECTION, Collections.singleton(DEFAULT_SORT_PARAMETER));
+        assertEquals(expected, actual);
+    }
+
+    private static Stream<Employee> searchCriteriaCases(){
+        return Stream.of(
+                new Employee(NAME, null, null, null, null, null),
+                new Employee(null, LAST_NAME, null, null, null, null),
+                new Employee(null, null, BIRTH_DAY, null, null, null),
+                new Employee(null, null, null, AGE, null, null),
+                new Employee(null, null, null, null, SALARY, null),
+                new Employee(null, null, null, null, null, ROLE),
+                new Employee(null, null, null, null, null, null)
+        );
     }
 
     private static Employee defaultDtoEmployee(){
