@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -23,13 +25,13 @@ public class EmployeeController{
     private EmployeeServiceImpl service;
 
     @PostMapping
-    public ResponseEntity<Employee> create(@RequestBody @NonNull Employee employee) throws CreateEmployeeException {
+    public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee) {
         service.create(employee);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Employee> findById(@PathVariable @NonNull Long id) {
+    public ResponseEntity<Employee> findById(@NotNull @PathVariable Long id) {
         return ResponseEntity.of(service.findById(id));
     }
 
@@ -47,12 +49,12 @@ public class EmployeeController{
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Employee> update(@PathVariable Long id, @RequestBody Employee source) {
+    public ResponseEntity<Employee> update(@NotNull @PathVariable Long id, @Valid @RequestBody Employee source) {
         return ResponseEntity.of(service.update(id, source));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Employee> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Employee> deleteById(@NotNull @PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }

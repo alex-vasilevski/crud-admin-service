@@ -12,18 +12,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.validation.MapBindingResult;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceImplTest {
@@ -46,6 +46,8 @@ public class EmployeeServiceImplTest {
     @Mock
     private Set<Validator> validators;
 
+
+
     @InjectMocks
     private EmployeeServiceImpl service;
 
@@ -59,7 +61,6 @@ public class EmployeeServiceImplTest {
     public void shouldThrowExceptionWhenTryingToCreateEmployeeAndAgeValidationWasNotPassed(){
         Employee employee = defaultDtoEmployee();
         employee.setAge(15);
-        when(validators.stream()).thenReturn(Stream.of(new EmployeeAgeValidator()));
         assertThrows(CreateEmployeeException.class, () -> service.create(employee));
     }
 

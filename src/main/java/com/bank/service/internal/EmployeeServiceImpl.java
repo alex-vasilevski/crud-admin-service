@@ -6,15 +6,10 @@ import com.bank.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.MapBindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
 
-import java.util.*;
-import java.util.stream.Stream;
-
-import static org.apache.logging.log4j.ThreadContext.isEmpty;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EmployeeServiceImpl {
@@ -26,19 +21,7 @@ public class EmployeeServiceImpl {
     @Autowired
     private EmployeeRepository repository;
 
-    @Autowired
-    private Set<Validator> validators;
-
-    public void create(Employee employee) throws CreateEmployeeException {
-        Errors errors = new MapBindingResult(new HashMap<>(), "employee");
-        Stream<Validator> supportedValidators = validators.stream().filter(validator -> validator.supports(Employee.class));
-        supportedValidators.forEach(validator -> validator.validate(employee, errors));
-
-        List<ObjectError> errorList = errors.getAllErrors();
-        if(!errorList.isEmpty()){
-            String message = errorList.get(0).getCode();
-            throw new CreateEmployeeException(message);
-        }
+    public void create(Employee employee) {
         repository.save(employee);
     }
 
