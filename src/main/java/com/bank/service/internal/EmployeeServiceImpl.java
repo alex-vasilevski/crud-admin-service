@@ -1,12 +1,13 @@
 package com.bank.service.internal;
 
 import com.bank.domain.Employee;
-import com.bank.exception.CreateEmployeeException;
+import com.bank.exception.EmployeeNotFoundException;
 import com.bank.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -25,11 +26,11 @@ public class EmployeeServiceImpl {
         repository.save(employee);
     }
 
-    public Optional<Employee> findById(Long id) {
-        return repository.findById(id);
+    public Employee findById(Long id) throws EmployeeNotFoundException {
+        return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
     }
 
-    public Page<Employee> findAllMatchingAndSort(Employee employee, String direction, Set<String> sortParams){
+    public Page<Employee> findAllMatchingAndSort(Employee employee, String direction, Set<String> sortParams) throws EmployeeNotFoundException {
 
         if (direction == null){
             direction = DEFAULT_SORT_DIRECTION;
@@ -41,13 +42,18 @@ public class EmployeeServiceImpl {
 
         Sort sort = Sort.by(Sort.Direction.valueOf(direction), params);
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
-        return repository.findAll(Example.of(employee), pageable);
+        Page<Employee> employees = repository.findAll(Example.of(employee), pageable);
+        if (employees.isEmpty()){
+            throw new EmployeeNotFoundException("ma matching results");
+        }
+
+        return employees;
     }
 
-    public Optional<Employee> update(Long id, Employee sourceDto) {
+    public Employee update(Long id, Employee source) throws EmployeeNotFoundException {
         Optional<Employee> optional = repository.findById(id);
-        optional.ifPresent(target -> update(sourceDto, target));
-        return optional;
+        Employee target = optional.orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
+        return update(target, source);
     }
 
     private Employee update(Employee source, Employee target){

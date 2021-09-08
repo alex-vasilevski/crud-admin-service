@@ -2,6 +2,7 @@ package com.bank.service.internal;
 
 import com.bank.domain.Employee;
 import com.bank.domain.Role;
+import com.bank.exception.EmployeeNotFoundException;
 import com.bank.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,17 +52,17 @@ public class EmployeeServiceImplTest {
     }
 
     @Test
-    public void shouldFindEmployeeByID(){
+    public void shouldFindEmployeeByID() throws EmployeeNotFoundException {
         when(repository.findById(ID)).thenReturn(Optional.of(defaultEntityEmployee()));
-        Optional<Employee> actual = service.findById(ID);
-        Optional<Employee> expected = Optional.of(defaultEntityEmployee());
+        Employee actual = service.findById(ID);
+        Employee expected = defaultEntityEmployee();
 
         assertEquals(expected, actual);
     }
 
     @ParameterizedTest
     @MethodSource("searchCriteriaCases")
-    public void shouldFindAllMatchingEmployeesAndSortByDefaultWithDefaultDirection(Employee searchCriteria){
+    public void shouldFindAllMatchingEmployeesAndSortByDefaultWithDefaultDirection(Employee searchCriteria) throws EmployeeNotFoundException {
         Sort sort = Sort.by(Sort.Direction.valueOf(DEFAULT_SORT_DIRECTION), DEFAULT_SORT_PARAMETER);
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
         Page<Employee> expected = new PageImpl<Employee>((List.of(defaultEntityEmployee())));

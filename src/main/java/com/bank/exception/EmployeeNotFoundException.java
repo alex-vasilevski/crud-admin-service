@@ -1,10 +1,10 @@
 package com.bank.exception;
 
-public class CreateEmployeeException extends Exception{
+public class EmployeeNotFoundException extends Exception{
 
     private String message;
 
-    public CreateEmployeeException(String message) {
+    public EmployeeNotFoundException(String message) {
         super(message);
     }
 

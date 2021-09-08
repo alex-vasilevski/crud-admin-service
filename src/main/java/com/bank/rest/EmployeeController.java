@@ -2,7 +2,7 @@ package com.bank.rest;
 
 import com.bank.domain.Employee;
 import com.bank.domain.Role;
-import com.bank.exception.CreateEmployeeException;
+import com.bank.exception.EmployeeNotFoundException;
 import com.bank.service.internal.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
@@ -30,9 +29,9 @@ public class EmployeeController{
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Employee> findById(@NotNull @PathVariable Long id) {
-        return ResponseEntity.of(service.findById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> findById(@NotNull @PathVariable Long id) throws EmployeeNotFoundException {
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @GetMapping
@@ -43,17 +42,17 @@ public class EmployeeController{
                                                                  @RequestParam(name = "salary", required = false) Double salary,
                                                                  @RequestParam (name = "role", required = false) Role role,
                                                                  @RequestParam(name = "direction", required = false) String direction,
-                                                                 @RequestParam(name = "sort_param", required = false) Set<String> sortParams) {
+                                                                 @RequestParam(name = "sort_param", required = false) Set<String> sortParams) throws EmployeeNotFoundException {
 
         return ResponseEntity.ok(service.findAllMatchingAndSort(new Employee(name, lastName, birthDay, age, salary, role), direction, sortParams));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Employee> update(@NotNull @PathVariable Long id, @Valid @RequestBody Employee source) {
-        return ResponseEntity.of(service.update(id, source));
+    @PutMapping("/{id}")
+    public ResponseEntity<Employee> update(@NotNull @PathVariable Long id, @Valid @RequestBody Employee source) throws EmployeeNotFoundException {
+        return ResponseEntity.ok(service.update(id, source));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Employee> deleteById(@NotNull @PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
