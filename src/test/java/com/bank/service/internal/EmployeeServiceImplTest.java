@@ -2,7 +2,6 @@ package com.bank.service.internal;
 
 import com.bank.domain.Employee;
 import com.bank.domain.Role;
-import com.bank.exception.CreateEmployeeException;
 import com.bank.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,18 +11,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
-import org.springframework.validation.MapBindingResult;
-import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceImplTest {
@@ -43,11 +41,6 @@ public class EmployeeServiceImplTest {
     @Mock
     private EmployeeRepository repository;
 
-    @Mock
-    private Set<Validator> validators;
-
-
-
     @InjectMocks
     private EmployeeServiceImpl service;
 
@@ -55,13 +48,6 @@ public class EmployeeServiceImplTest {
     public void shouldCreateEmployee(){
         when(repository.save(defaultDtoEmployee())).thenReturn(defaultEntityEmployee());
         assertDoesNotThrow(() -> service.create(defaultDtoEmployee()));
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenTryingToCreateEmployeeAndAgeValidationWasNotPassed(){
-        Employee employee = defaultDtoEmployee();
-        employee.setAge(15);
-        assertThrows(CreateEmployeeException.class, () -> service.create(employee));
     }
 
     @Test
