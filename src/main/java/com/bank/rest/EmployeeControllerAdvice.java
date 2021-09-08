@@ -19,14 +19,14 @@ public class EmployeeControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Employee> badRequest(MethodArgumentNotValidException e){
-        logger.trace("exception occurred; message: " + e.getMessage());
+        logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
         return ResponseEntity.badRequest().build();
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EmployeeNotFoundException.class)
     public ResponseEntity<Employee> notFound(EmployeeNotFoundException e){
-        logger.trace("exception occurred; message: " + e.getMessage());
+        logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
         return ResponseEntity.notFound().build();
     }
 }

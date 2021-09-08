@@ -3,14 +3,12 @@ package com.bank.service.internal;
 import com.bank.domain.Employee;
 import com.bank.exception.EmployeeNotFoundException;
 import com.bank.repository.EmployeeRepository;
-import com.bank.rest.EmployeeController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;

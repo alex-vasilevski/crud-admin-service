@@ -6,6 +6,7 @@ public class EmployeeNotFoundException extends Exception{
 
     public EmployeeNotFoundException(String message) {
         super(message);
+        this.message = message;
     }
 
     @Override
