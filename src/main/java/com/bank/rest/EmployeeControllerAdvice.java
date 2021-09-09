@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice(assignableTypes = EmployeeController.class)
 public class EmployeeControllerAdvice {
 
-    private Logger logger = LoggerFactory.getLogger(EmployeeControllerAdvice.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeControllerAdvice.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

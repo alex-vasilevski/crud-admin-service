@@ -21,7 +21,7 @@ public class EmployeeServiceImpl {
     private static final String DEFAULT_SORT_PARAMETER = "id";
     private static final String DEFAULT_SORT_DIRECTION = Sort.Direction.ASC.toString();
 
-    private Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     @Autowired
     private EmployeeRepository repository;
@@ -37,6 +37,9 @@ public class EmployeeServiceImpl {
     }
 
     public Page<Employee> findAllMatchingAndSort(Employee employee, String direction, Set<String> sortParams) throws EmployeeNotFoundException {
+
+//        direction = Optional.ofNullable(direction).orElse(DEFAULT_SORT_DIRECTION);
+//        sortParams = Optional.ofNullable(sortParams).orElse(Collections.singleton(DEFAULT_SORT_PARAMETER));
 
         if (direction == null){
             direction = DEFAULT_SORT_DIRECTION;

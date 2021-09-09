@@ -23,7 +23,7 @@ import java.util.Set;
 @RequestMapping("/employees")
 public class EmployeeController{
 
-    private Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
     @Qualifier("employeeServiceImpl")
