@@ -1,9 +1,9 @@
 package com.bank.service.internal;
 
-import com.bank.domain.Employee;
-import com.bank.domain.Role;
+import com.bank.store.domain.EmployeeEntity;
+import com.bank.store.domain.Role;
 import com.bank.exception.EmployeeNotFoundException;
-import com.bank.repository.EmployeeRepository;
+import com.bank.store.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class EmployeeServiceImplTest {
+public class EmployeeEntityServiceImplTest {
 
     private static final Long ID = 1L;
     private static final String NAME = "Alex";
@@ -54,44 +54,44 @@ public class EmployeeServiceImplTest {
     @Test
     public void shouldFindEmployeeByID() throws EmployeeNotFoundException {
         when(repository.findById(ID)).thenReturn(Optional.of(defaultEntityEmployee()));
-        Employee actual = service.findById(ID);
-        Employee expected = defaultEntityEmployee();
+        EmployeeEntity actual = service.findById(ID);
+        EmployeeEntity expected = defaultEntityEmployee();
 
         assertEquals(expected, actual);
     }
 
     @ParameterizedTest
     @MethodSource("searchCriteriaCases")
-    public void shouldFindAllMatchingEmployeesAndSortByDefaultWithDefaultDirection(Employee searchCriteria) throws EmployeeNotFoundException {
+    public void shouldFindAllMatchingEmployeesAndSortByDefaultWithDefaultDirection(EmployeeEntity searchCriteria) throws EmployeeNotFoundException {
         Sort sort = Sort.by(Sort.Direction.valueOf(DEFAULT_SORT_DIRECTION), DEFAULT_SORT_PARAMETER);
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
-        Page<Employee> expected = new PageImpl<Employee>((List.of(defaultEntityEmployee())));
+        Page<EmployeeEntity> expected = new PageImpl<EmployeeEntity>((List.of(defaultEntityEmployee())));
         when(repository.findAll(Example.of(searchCriteria), pageable)).thenReturn(expected);
 
-        Page<Employee> actual = service.findAllMatchingAndSort(searchCriteria, DEFAULT_SORT_DIRECTION, Collections.singleton(DEFAULT_SORT_PARAMETER));
+        Page<EmployeeEntity> actual = service.findAllMatchingAndSort(searchCriteria, DEFAULT_SORT_DIRECTION, Collections.singleton(DEFAULT_SORT_PARAMETER));
         assertEquals(expected, actual);
     }
 
-    private static Stream<Employee> searchCriteriaCases(){
+    private static Stream<EmployeeEntity> searchCriteriaCases(){
         return Stream.of(
-                new Employee(NAME, null, null, null, null, null),
-                new Employee(null, LAST_NAME, null, null, null, null),
-                new Employee(null, null, BIRTH_DAY, null, null, null),
-                new Employee(null, null, null, AGE, null, null),
-                new Employee(null, null, null, null, SALARY, null),
-                new Employee(null, null, null, null, null, ROLE),
-                new Employee(null, null, null, null, null, null)
+                new EmployeeEntity(NAME, null, null, null, null, null),
+                new EmployeeEntity(null, LAST_NAME, null, null, null, null),
+                new EmployeeEntity(null, null, BIRTH_DAY, null, null, null),
+                new EmployeeEntity(null, null, null, AGE, null, null),
+                new EmployeeEntity(null, null, null, null, SALARY, null),
+                new EmployeeEntity(null, null, null, null, null, ROLE),
+                new EmployeeEntity(null, null, null, null, null, null)
         );
     }
 
-    private static Employee defaultDtoEmployee(){
-        return new Employee(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
+    private static EmployeeEntity defaultDtoEmployee(){
+        return new EmployeeEntity(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
     }
 
-    private static Employee defaultEntityEmployee(){
-        Employee employee = new Employee(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
-        employee.setId(ID);
-        return employee;
+    private static EmployeeEntity defaultEntityEmployee(){
+        EmployeeEntity employeeEntity = new EmployeeEntity(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
+        employeeEntity.setId(ID);
+        return employeeEntity;
     }
 
 }

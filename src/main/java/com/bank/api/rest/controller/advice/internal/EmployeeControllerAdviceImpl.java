@@ -1,6 +1,8 @@
-package com.bank.rest;
+package com.bank.api.rest.controller.advice.internal;
 
-import com.bank.domain.Employee;
+import com.bank.api.rest.controller.EmployeeController;
+import com.bank.api.rest.controller.advice.spi.EmployeeControllerAdvice;
+import com.bank.store.domain.EmployeeEntity;
 import com.bank.exception.EmployeeNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,20 +14,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice(assignableTypes = EmployeeController.class)
-public class EmployeeControllerAdvice {
+public class EmployeeControllerAdviceImpl implements EmployeeControllerAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeControllerAdvice.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeControllerAdviceImpl.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Employee> badRequest(MethodArgumentNotValidException e){
+    @Override
+    public ResponseEntity<EmployeeEntity> badRequest(MethodArgumentNotValidException e){
         logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
         return ResponseEntity.badRequest().build();
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EmployeeNotFoundException.class)
-    public ResponseEntity<Employee> notFound(EmployeeNotFoundException e){
+    @Override
+    public ResponseEntity<EmployeeEntity> notFound(EmployeeNotFoundException e){
         logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
         return ResponseEntity.notFound().build();
     }

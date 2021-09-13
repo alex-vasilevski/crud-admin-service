@@ -1,6 +1,6 @@
 package com.bank.jms;
 
-import com.bank.domain.Employee;
+import com.bank.store.domain.EmployeeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ public class EmployeeProducer {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void sendTo(String destination, Employee employee){
-        jmsTemplate.convertAndSend(destination, employee);
+    public void sendTo(String destination, EmployeeEntity employeeEntity){
+        jmsTemplate.convertAndSend(destination, employeeEntity);
         logger.info("producer: message was sent");
     }
 }

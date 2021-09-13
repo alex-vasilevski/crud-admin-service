@@ -1,4 +1,4 @@
-package com.bank.domain;
+package com.bank.store.domain;
 
 public enum Role {
     MANAGER,

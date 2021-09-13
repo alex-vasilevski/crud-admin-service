@@ -1,8 +1,11 @@
 package com.bank.service.internal;
 
-import com.bank.domain.Employee;
+import com.bank.api.dto.Employee;
+import com.bank.api.transformers.spi.EmployeeTransformer;
+import com.bank.api.transformers.spi.Transformer;
+import com.bank.store.domain.EmployeeEntity;
 import com.bank.exception.EmployeeNotFoundException;
-import com.bank.repository.EmployeeRepository;
+import com.bank.store.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl {
@@ -26,53 +30,58 @@ public class EmployeeServiceImpl {
     @Autowired
     private EmployeeRepository repository;
 
+    @Autowired
+    private EmployeeTransformer transformer;
+
     public void create(Employee employee) {
         logger.info("trying to create employee: " + employee.toString());
-        repository.save(employee);
+        EmployeeEntity entity = transformer.toEntity(employee);
+        repository.save(entity);
     }
 
     public Employee findById(Long id) throws EmployeeNotFoundException {
         logger.info("trying to find employee with id " + id);
-        return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
+        EmployeeEntity entity = repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
+        return transformer.toDto(entity);
     }
 
-    public Page<Employee> findAllMatchingAndSort(Employee employee, String direction, Set<String> sortParams) throws EmployeeNotFoundException {
+    public Page<Employee> findAllMatchingAndSort(Employee searchCriteria, String direction, Set<String> sortParams) throws EmployeeNotFoundException {
 
 //        direction = Optional.ofNullable(direction).orElse(DEFAULT_SORT_DIRECTION);
 //        sortParams = Optional.ofNullable(sortParams).orElse(Collections.singleton(DEFAULT_SORT_PARAMETER));
 
-        if (direction == null){
+        if (direction == null)
             direction = DEFAULT_SORT_DIRECTION;
-        }
-        if(sortParams == null){
+
+        if(sortParams == null)
             sortParams = Collections.singleton(DEFAULT_SORT_PARAMETER);
-        }
+
         String[] params = sortParams.toArray(new String[0]);
 
         Sort sort = Sort.by(Sort.Direction.valueOf(direction), params);
         Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
+        EmployeeEntity criteria = transformer.toEntity(searchCriteria);
 
-        logger.info("trying to find matching employee by following params: " + employee +
+        logger.info("trying to find matching employee by following params: " + searchCriteria +
                 "; using sorting by params " + Arrays.toString(sortParams.toArray())
                 + ", with direction: " + direction);
 
-        Page<Employee> employees = repository.findAll(Example.of(employee), pageable);
-        if (employees.isEmpty()){
-            throw new EmployeeNotFoundException("ma matching results");
-        }
+        Page<EmployeeEntity> searchResults = repository.findAll(Example.of(criteria), pageable);
+        if(searchResults.getTotalElements() == 0)
+            throw new EmployeeNotFoundException("no matching results");
 
-        return employees;
+        return searchResults.map(transformer::toDto);
     }
 
     public Employee update(Long id, Employee source) throws EmployeeNotFoundException {
         logger.info("trying to update employee with id + " + id + " with following value: " + source.toString());
 
-        Optional<Employee> optional = repository.findById(id);
-        Employee target = optional.orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
+        Optional<EmployeeEntity> optional = repository.findById(id);
+        EmployeeEntity target = optional.orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
         return update(target, source);
     }
 
-    private Employee update(Employee source, Employee target){
+    private EmployeeEntity update(EmployeeEntity source, EmployeeEntity target){
         target.setName(source.getName());
         target.setLastName(source.getLastName());
         target.setAge(source.getAge());
