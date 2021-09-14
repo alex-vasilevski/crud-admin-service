@@ -1,9 +1,12 @@
 package com.bank.service.internal;
 
+import com.bank.api.dto.Employee;
+import com.bank.api.transformers.spi.EmployeeTransformer;
 import com.bank.store.domain.EmployeeEntity;
 import com.bank.store.domain.Role;
 import com.bank.exception.EmployeeNotFoundException;
 import com.bank.store.repository.EmployeeRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +25,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,50 +46,33 @@ public class EmployeeEntityServiceImplTest {
     @Mock
     private EmployeeRepository repository;
 
+    @Mock
+    private EmployeeTransformer transformer;
+
     @InjectMocks
     private EmployeeServiceImpl service;
 
+
+
     @Test
     public void shouldCreateEmployee(){
-        when(repository.save(defaultDtoEmployee())).thenReturn(defaultEntityEmployee());
+        when(transformer.toEntity(any())).thenReturn(defaultEntityEmployee());
+        when(repository.save(any())).thenReturn(defaultEntityEmployee());
         assertDoesNotThrow(() -> service.create(defaultDtoEmployee()));
     }
 
     @Test
     public void shouldFindEmployeeByID() throws EmployeeNotFoundException {
+        when(transformer.toDto(any())).thenReturn(defaultDtoEmployee());
         when(repository.findById(ID)).thenReturn(Optional.of(defaultEntityEmployee()));
-        EmployeeEntity actual = service.findById(ID);
-        EmployeeEntity expected = defaultEntityEmployee();
+        Employee actual = service.findById(ID);
+        Employee expected = defaultDtoEmployee();
 
         assertEquals(expected, actual);
     }
 
-    @ParameterizedTest
-    @MethodSource("searchCriteriaCases")
-    public void shouldFindAllMatchingEmployeesAndSortByDefaultWithDefaultDirection(EmployeeEntity searchCriteria) throws EmployeeNotFoundException {
-        Sort sort = Sort.by(Sort.Direction.valueOf(DEFAULT_SORT_DIRECTION), DEFAULT_SORT_PARAMETER);
-        Pageable pageable = PageRequest.ofSize(PAGE_SIZE).withSort(sort);
-        Page<EmployeeEntity> expected = new PageImpl<EmployeeEntity>((List.of(defaultEntityEmployee())));
-        when(repository.findAll(Example.of(searchCriteria), pageable)).thenReturn(expected);
-
-        Page<EmployeeEntity> actual = service.findAllMatchingAndSort(searchCriteria, DEFAULT_SORT_DIRECTION, Collections.singleton(DEFAULT_SORT_PARAMETER));
-        assertEquals(expected, actual);
-    }
-
-    private static Stream<EmployeeEntity> searchCriteriaCases(){
-        return Stream.of(
-                new EmployeeEntity(NAME, null, null, null, null, null),
-                new EmployeeEntity(null, LAST_NAME, null, null, null, null),
-                new EmployeeEntity(null, null, BIRTH_DAY, null, null, null),
-                new EmployeeEntity(null, null, null, AGE, null, null),
-                new EmployeeEntity(null, null, null, null, SALARY, null),
-                new EmployeeEntity(null, null, null, null, null, ROLE),
-                new EmployeeEntity(null, null, null, null, null, null)
-        );
-    }
-
-    private static EmployeeEntity defaultDtoEmployee(){
-        return new EmployeeEntity(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
+    private static Employee defaultDtoEmployee(){
+        return new Employee(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
     }
 
     private static EmployeeEntity defaultEntityEmployee(){

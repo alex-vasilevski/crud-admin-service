@@ -73,12 +73,14 @@ public class EmployeeServiceImpl {
         return searchResults.map(transformer::toDto);
     }
 
-    public Employee update(Long id, Employee source) throws EmployeeNotFoundException {
-        logger.info("trying to update employee with id + " + id + " with following value: " + source.toString());
+    public Employee update(Long id, Employee employee) throws EmployeeNotFoundException {
+        logger.info("trying to update employee with id + " + id + " with following value: " + employee.toString());
 
         Optional<EmployeeEntity> optional = repository.findById(id);
         EmployeeEntity target = optional.orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
-        return update(target, source);
+        EmployeeEntity source = transformer.toEntity(employee);
+        target = update(target, source);
+        return transformer.toDto(target);
     }
 
     private EmployeeEntity update(EmployeeEntity source, EmployeeEntity target){

@@ -1,13 +1,15 @@
 package com.bank.store.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
 public class EmployeeEntity {
