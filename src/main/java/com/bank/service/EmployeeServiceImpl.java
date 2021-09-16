@@ -1,13 +1,14 @@
 package com.bank.service;
 
-import com.bank.api.dto.Employee;
-import com.bank.api.transformers.spi.EmployeeTransformer;
+import com.bank.api.dto.v2.Employee;
+import com.bank.api.transformers.spi.Transformer;
 import com.bank.store.domain.EmployeeEntity;
 import com.bank.exception.EmployeeNotFoundException;
 import com.bank.store.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,8 @@ public class EmployeeServiceImpl {
     private EmployeeRepository repository;
 
     @Autowired
-    private EmployeeTransformer transformer;
+    @Qualifier("employeeRecordTransformer")
+    private Transformer<EmployeeEntity, Employee> transformer;
 
     public void create(Employee employee) {
         logger.info("trying to create employee: " + employee.toString());
@@ -84,6 +86,7 @@ public class EmployeeServiceImpl {
         target.setAge(source.getAge());
         target.setBirthDay(source.getBirthDay());
         target.setSalary(source.getSalary());
+        target.setDivision(source.getDivision());
         return target;
     }
 

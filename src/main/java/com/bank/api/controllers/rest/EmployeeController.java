@@ -1,7 +1,7 @@
 package com.bank.api.controllers.rest;
 
-import com.bank.api.dto.Employee;
-import com.bank.store.domain.EmployeeEntity;
+import com.bank.api.dto.v2.Employee;
+import com.bank.store.domain.Division;
 import com.bank.store.domain.Role;
 import com.bank.exception.EmployeeNotFoundException;
 import com.bank.service.EmployeeServiceImpl;
@@ -44,15 +44,16 @@ public class EmployeeController{
 
     @GetMapping
     public ResponseEntity<Page<Employee>> findAllMatchingAndSort(@RequestParam(name = "name", required = false) String name,
-                                                                       @RequestParam(name = "last_name", required = false) String lastName,
-                                                                       @RequestParam(name = "birth_day", required = false) LocalDate birthDay,
-                                                                       @RequestParam(name = "age", required = false) Integer age,
-                                                                       @RequestParam(name = "salary", required = false) Double salary,
-                                                                       @RequestParam (name = "role", required = false) Role role,
-                                                                       @RequestParam(name = "direction", required = false) String direction,
-                                                                       @RequestParam(name = "sort_param", required = false) Set<String> sortParams) throws EmployeeNotFoundException {
+                                                                 @RequestParam(name = "last_name", required = false) String lastName,
+                                                                 @RequestParam(name = "birth_day", required = false) LocalDate birthDay,
+                                                                 @RequestParam(name = "age", required = false) Integer age,
+                                                                 @RequestParam(name = "salary", required = false) Double salary,
+                                                                 @RequestParam(name = "division", required = false) Division division,
+                                                                 @RequestParam (name = "role", required = false) Role role,
+                                                                 @RequestParam(name = "direction", required = false) String direction,
+                                                                 @RequestParam(name = "sort_param", required = false) Set<String> sortParams) throws EmployeeNotFoundException {
         logger.info("started to handle GET request");
-        Employee employee = new Employee(name, lastName, birthDay, age, salary, role);
+        Employee employee = new Employee(name, lastName, birthDay, age, salary, division, role);
         return ResponseEntity.ok(service.findAllMatchingAndSort(employee, direction, sortParams));
     }
 
@@ -63,7 +64,7 @@ public class EmployeeController{
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<EmployeeEntity> deleteById(@NotNull @PathVariable Long id) {
+    public ResponseEntity<Employee> deleteById(@NotNull @PathVariable Long id) {
         logger.info("started to handle DELETE request");
         service.deleteById(id);
         return ResponseEntity.noContent().build();

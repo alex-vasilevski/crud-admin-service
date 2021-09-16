@@ -1,7 +1,8 @@
 package com.bank.service;
 
-import com.bank.api.dto.Employee;
-import com.bank.api.transformers.spi.EmployeeTransformer;
+import com.bank.api.dto.v2.Employee;
+import com.bank.api.transformers.spi.Transformer;
+import com.bank.store.domain.Division;
 import com.bank.store.domain.EmployeeEntity;
 import com.bank.store.domain.Role;
 import com.bank.exception.EmployeeNotFoundException;
@@ -32,6 +33,7 @@ public class EmployeeEntityServiceImplTest {
     private static final Integer AGE = 22;
     private static final Double SALARY = 750.5D;
     private static final Role ROLE = Role.CLERK;
+    private static final Division DIVISION = Division.JAVA;
 
     private static final int PAGE_SIZE = 10;
     private static final String DEFAULT_SORT_PARAMETER = "id";
@@ -41,7 +43,7 @@ public class EmployeeEntityServiceImplTest {
     private EmployeeRepository repository;
 
     @Mock
-    private EmployeeTransformer transformer;
+    private Transformer<EmployeeEntity, Employee> transformer;
 
     @InjectMocks
     private EmployeeServiceImpl service;
@@ -66,11 +68,12 @@ public class EmployeeEntityServiceImplTest {
     }
 
     private static Employee defaultDtoEmployee(){
-        return new Employee(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
+        return new Employee(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, DIVISION, ROLE);
     }
 
     private static EmployeeEntity defaultEntityEmployee(){
-        EmployeeEntity employeeEntity = new EmployeeEntity(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, ROLE);
+        EmployeeEntity employeeEntity =
+                new EmployeeEntity(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, DIVISION, ROLE);
         employeeEntity.setId(ID);
         return employeeEntity;
     }

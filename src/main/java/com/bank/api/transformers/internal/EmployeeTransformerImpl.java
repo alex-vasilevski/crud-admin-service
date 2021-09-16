@@ -1,16 +1,13 @@
 package com.bank.api.transformers.internal;
 
-import com.bank.api.dto.Employee;
-import com.bank.api.transformers.spi.EmployeeTransformer;
+import com.bank.api.dto.v1.Employee;
 import com.bank.api.transformers.spi.Transformer;
 import com.bank.store.domain.EmployeeEntity;
-import com.bank.store.domain.Role;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
+@Deprecated
 @Component
-public class EmployeeTransformerImpl implements EmployeeTransformer {
+public class EmployeeTransformerImpl implements Transformer<EmployeeEntity, Employee> {
 
     public Employee toDto(EmployeeEntity entity){
         return new Employee(
@@ -19,6 +16,7 @@ public class EmployeeTransformerImpl implements EmployeeTransformer {
                 entity.getBirthDay(),
                 entity.getAge(),
                 entity.getSalary(),
+                entity.getDivision(),
                 entity.getRole());
     }
 
@@ -29,6 +27,7 @@ public class EmployeeTransformerImpl implements EmployeeTransformer {
                 dto.getBirthDay(),
                 dto.getAge(),
                 dto.getSalary(),
+                dto.getDivision(),
                 dto.getRole());
     }
 
