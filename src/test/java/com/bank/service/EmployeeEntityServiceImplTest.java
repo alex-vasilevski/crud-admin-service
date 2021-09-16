@@ -1,4 +1,4 @@
-package com.bank.service.internal;
+package com.bank.service;
 
 import com.bank.api.dto.Employee;
 import com.bank.api.transformers.spi.EmployeeTransformer;
@@ -6,11 +6,8 @@ import com.bank.store.domain.EmployeeEntity;
 import com.bank.store.domain.Role;
 import com.bank.exception.EmployeeNotFoundException;
 import com.bank.store.repository.EmployeeRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,10 +15,7 @@ import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;

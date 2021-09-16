@@ -1,10 +1,10 @@
-package com.bank.api.rest.controller;
+package com.bank.api.controllers.rest;
 
 import com.bank.api.dto.Employee;
 import com.bank.store.domain.EmployeeEntity;
 import com.bank.store.domain.Role;
 import com.bank.exception.EmployeeNotFoundException;
-import com.bank.service.internal.EmployeeServiceImpl;
+import com.bank.service.EmployeeServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ public class EmployeeController{
     private EmployeeServiceImpl service;
 
     @PostMapping
-    public ResponseEntity<Employee> create(@Valid @RequestBody Employee employeeEntity) {
+    public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee) {
         logger.info("started to handle POST request");
-        service.create(employeeEntity);
+        service.create(employee);
         return ResponseEntity.created(URI.create("/employees")).build();
     }
 

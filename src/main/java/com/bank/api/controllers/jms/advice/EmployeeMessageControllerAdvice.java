@@ -1,9 +1,9 @@
-package com.bank.api.rest.controller.advice.internal;
+package com.bank.api.controllers.jms.advice;
 
-import com.bank.api.rest.controller.EmployeeController;
-import com.bank.api.rest.controller.advice.spi.EmployeeControllerAdvice;
-import com.bank.store.domain.EmployeeEntity;
+import com.bank.api.controllers.jms.EmployeeMessageController;
+import com.bank.api.controllers.rest.advice.EmployeeControllerAdviceImpl;
 import com.bank.exception.EmployeeNotFoundException;
+import com.bank.store.domain.EmployeeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,22 +13,19 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice(assignableTypes = EmployeeController.class)
-public class EmployeeControllerAdviceImpl implements EmployeeControllerAdvice {
+@ControllerAdvice(assignableTypes = EmployeeMessageController.class)
+public class EmployeeMessageControllerAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeControllerAdviceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeMessageControllerAdvice.class);
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @Override
     public ResponseEntity<EmployeeEntity> badRequest(MethodArgumentNotValidException e){
         logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
         return ResponseEntity.badRequest().build();
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+
     @ExceptionHandler(EmployeeNotFoundException.class)
-    @Override
     public ResponseEntity<EmployeeEntity> notFound(EmployeeNotFoundException e){
         logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
         return ResponseEntity.notFound().build();

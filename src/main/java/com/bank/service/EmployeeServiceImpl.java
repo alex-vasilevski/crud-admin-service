@@ -1,8 +1,7 @@
-package com.bank.service.internal;
+package com.bank.service;
 
 import com.bank.api.dto.Employee;
 import com.bank.api.transformers.spi.EmployeeTransformer;
-import com.bank.api.transformers.spi.Transformer;
 import com.bank.store.domain.EmployeeEntity;
 import com.bank.exception.EmployeeNotFoundException;
 import com.bank.store.repository.EmployeeRepository;
@@ -16,7 +15,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl {
@@ -46,9 +44,6 @@ public class EmployeeServiceImpl {
     }
 
     public Page<Employee> findAllMatchingAndSort(Employee searchCriteria, String direction, Set<String> sortParams) throws EmployeeNotFoundException {
-
-//        direction = Optional.ofNullable(direction).orElse(DEFAULT_SORT_DIRECTION);
-//        sortParams = Optional.ofNullable(sortParams).orElse(Collections.singleton(DEFAULT_SORT_PARAMETER));
 
         if (direction == null)
             direction = DEFAULT_SORT_DIRECTION;
