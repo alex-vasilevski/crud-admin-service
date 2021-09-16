@@ -5,19 +5,15 @@ import com.bank.api.dto.Employee;
 import com.bank.store.domain.EmployeeEntity;
 import com.bank.store.domain.Role;
 import com.bank.store.repository.EmployeeRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class EmployeeMessagingTest {
@@ -42,8 +38,8 @@ public class EmployeeMessagingTest {
     public void shouldSendMessageAndReceiveMessageAndStoreItToDB(){
         producerService.sendMessage(defaultDtoEmployee());
         EmployeeEntity expected = defaultEntityEmployee();
-        EmployeeEntity actual = employeeRepository.getById(ID);
-        assertEquals(expected, actual);
+        Optional<EmployeeEntity> actual = employeeRepository.findById(ID);
+        assertEquals(expected, actual.get());
     }
 
     public void shouldAbortNotValidMessage(){

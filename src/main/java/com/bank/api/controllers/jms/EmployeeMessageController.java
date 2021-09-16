@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 
@@ -19,7 +19,10 @@ public class EmployeeMessageController {
     @Autowired
     private EmployeeServiceImpl service;
 
-    @JmsListener(destination =  "${jms.queue}")
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @JmsListener(destination =  "${jms.queue}", containerFactory = "myFactory")
     public void receiveMessage(@Valid Employee employee){
         logger.info("received employee: " + employee.toString());
         service.create(employee);
