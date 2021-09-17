@@ -16,6 +16,9 @@ import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -29,7 +32,8 @@ public class EmployeeEntityServiceImplTest {
     private static final Long ID = 1L;
     private static final String NAME = "Alex";
     private static final String LAST_NAME = "Vasilevski";
-    private static final LocalDate BIRTH_DAY = LocalDate.of(1999, Month.AUGUST, 20);
+    private static final Calendar BIRTH_DAY = new GregorianCalendar(1999, 8, 20);
+    private static final Calendar START_DAY = new GregorianCalendar(2021, 8, 23);
     private static final Integer AGE = 22;
     private static final Double SALARY = 750.5D;
     private static final Role ROLE = Role.CLERK;
@@ -47,8 +51,6 @@ public class EmployeeEntityServiceImplTest {
 
     @InjectMocks
     private EmployeeServiceImpl service;
-
-
 
     @Test
     public void shouldCreateEmployee(){
@@ -68,12 +70,12 @@ public class EmployeeEntityServiceImplTest {
     }
 
     private static Employee defaultDtoEmployee(){
-        return new Employee(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, DIVISION, ROLE);
+        return new Employee(NAME, LAST_NAME, BIRTH_DAY, AGE, START_DAY, SALARY, DIVISION, ROLE);
     }
 
     private static EmployeeEntity defaultEntityEmployee(){
         EmployeeEntity employeeEntity =
-                new EmployeeEntity(NAME, LAST_NAME, BIRTH_DAY, AGE, SALARY, DIVISION, ROLE);
+                new EmployeeEntity(NAME, LAST_NAME, BIRTH_DAY, AGE, START_DAY, SALARY, DIVISION, ROLE);
         employeeEntity.setId(ID);
         return employeeEntity;
     }

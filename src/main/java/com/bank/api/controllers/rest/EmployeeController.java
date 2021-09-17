@@ -17,6 +17,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 @RestController
@@ -45,15 +47,16 @@ public class EmployeeController{
     @GetMapping
     public ResponseEntity<Page<Employee>> findAllMatchingAndSort(@RequestParam(name = "name", required = false) String name,
                                                                  @RequestParam(name = "last_name", required = false) String lastName,
-                                                                 @RequestParam(name = "birth_day", required = false) LocalDate birthDay,
+                                                                 @RequestParam(name = "birth_day", required = false) Calendar birthDay,
                                                                  @RequestParam(name = "age", required = false) Integer age,
+                                                                 @RequestParam(name = "start_day", required = false) Calendar startDay,
                                                                  @RequestParam(name = "salary", required = false) Double salary,
                                                                  @RequestParam(name = "division", required = false) Division division,
                                                                  @RequestParam (name = "role", required = false) Role role,
                                                                  @RequestParam(name = "direction", required = false) String direction,
                                                                  @RequestParam(name = "sort_param", required = false) Set<String> sortParams) throws EmployeeNotFoundException {
         logger.info("started to handle GET request");
-        Employee employee = new Employee(name, lastName, birthDay, age, salary, division, role);
+        Employee employee = new Employee(name, lastName, birthDay, age, startDay, salary, division, role);
         return ResponseEntity.ok(service.findAllMatchingAndSort(employee, direction, sortParams));
     }
 

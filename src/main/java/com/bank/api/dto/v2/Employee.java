@@ -9,6 +9,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.Calendar;
+import java.util.Date;
 
 public record Employee(
         @NotBlank(message = "name is mandatory")
@@ -16,11 +19,11 @@ public record Employee(
         @JsonProperty(value = "last_name")
         @NotBlank(message = "last name is mandatory")
         String lastName,
-        @JsonProperty(value = "birth_day")
-        LocalDate birthDay,
+        Calendar birthDay,
         @Min(value = 18, message = "minimum employees age is 18")
         @Max(value = 60, message = "maximum employees age is 60")
         Integer age,
+        Calendar startDay,
         Double salary,
         @NotBlank(message = "employee should have a division")
         Division division,
@@ -28,7 +31,7 @@ public record Employee(
         Role role ) {
 
         public Employee() {
-                this(null, null, null, null, null, null, null);
+                this(null, null, null, null, null, null, null, null);
         }
 
 }

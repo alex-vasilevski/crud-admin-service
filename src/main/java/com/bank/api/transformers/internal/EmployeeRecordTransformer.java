@@ -13,6 +13,7 @@ public class EmployeeRecordTransformer implements Transformer<EmployeeEntity, Em
                 employeeEntity.getLastName(),
                 employeeEntity.getBirthDay(),
                 employeeEntity.getAge(),
+                employeeEntity.getStartDay(),
                 employeeEntity.getSalary(),
                 employeeEntity.getDivision(),
                 employeeEntity.getRole());
@@ -24,6 +25,7 @@ public class EmployeeRecordTransformer implements Transformer<EmployeeEntity, Em
                 employee.lastName(),
                 employee.birthDay(),
                 employee.age(),
+                employee.startDay(),
                 employee.salary(),
                 employee.division(),
                 employee.role());

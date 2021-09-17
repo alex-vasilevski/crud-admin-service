@@ -11,16 +11,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmployeeProducer {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeProducer.class);
 
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @Value("${employeeEntity.jms.destination}")
+    @Value("${employee.jms.destination}")
     private String jmsQueue;
 
     public void sendMessage(Employee employee){
         jmsTemplate.convertAndSend(jmsQueue, employee);
-        logger.info("producer> message was sent");
+        logger.info("producer> message was sent to destination" + jmsQueue);
     }
 }

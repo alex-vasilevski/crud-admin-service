@@ -18,7 +18,7 @@ public class EmployeeConsumer {
     @Autowired
     private EmployeeServiceImpl service;
 
-    @JmsListener(destination =  "${employeeEntity.jms.destination}", containerFactory = "jmsFactory")
+    @JmsListener(destination =  "${employee.jms.destination}", containerFactory = "jmsFactory")
     public void receiveMessage(@Valid Employee employee){
         logger.info("consumer> " + employee);
         service.create(employee);
