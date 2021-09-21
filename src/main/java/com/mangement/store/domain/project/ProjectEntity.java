@@ -13,6 +13,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "project")
 public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

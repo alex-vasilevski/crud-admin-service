@@ -49,12 +49,6 @@ public class TaskController {
         return ResponseEntity.created(URI.create(POST_NEW_TASK_TO_PROJECT)).build();
     }
 
-    @GetMapping(GET_TASK_BY_ID)
-    public ResponseEntity<Task> findById(@NotNull @PathVariable Long id) throws TaskNotFoundException {
-        logger.info("started to handle GET request on end point " + GET_TASK_BY_ID);
-        return ResponseEntity.ok(taskService.findById(id));
-    }
-
     @GetMapping(GET_ALL_MATCHING_TASKS_OF_PROJECT)
     public ResponseEntity<Page<Task>> findAllMatchingInProjectAndSort (@NotNull @PathVariable("project_id") Long projectId,
                                                                        @RequestParam(name = "description", required = false) String description,
@@ -95,5 +89,4 @@ public class TaskController {
         taskService.deleteById(projectId, taskId);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -1,5 +1,6 @@
 package com.mangement.store.domain.task;
 
+import com.mangement.store.domain.project.ProjectEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,9 @@ public class TaskEntity {
     private TaskPriority taskPriority;
     private LocalDateTime issuedAt;
     private LocalDateTime deadline;
+    @JoinColumn(table = "project")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ProjectEntity.class)
+    private ProjectEntity project;
 
     public TaskEntity(String description, TaskStatus taskStatus, TaskPriority taskPriority, LocalDateTime issuedAt, LocalDateTime deadline) {
         this.description = description;
