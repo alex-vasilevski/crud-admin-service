@@ -63,8 +63,8 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectEntity criteria = transformer.toEntity(searchCriteria);
 
         logger.info("trying to find matching projects by following params: " + searchCriteria +
-                "; using sorting by params " + Arrays.toString(sortParams.toArray())
-                + ", with direction: " + direction);
+                "; using sorting by params " + Arrays.toString(sortParams.toArray()) +
+                ", with direction: " + direction);
 
         Page<ProjectEntity> searchResults = repository.findAll(Example.of(criteria), pageable);
 
