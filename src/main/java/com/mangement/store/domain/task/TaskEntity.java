@@ -24,8 +24,11 @@ public class TaskEntity {
     private LocalDateTime issuedAt;
     private LocalDateTime deadLine;
 
-    public TaskEntity(String description, TaskStatus taskStatus) {
+    public TaskEntity(String description, TaskStatus taskStatus, TaskPriority taskPriority, LocalDateTime issuedAt, LocalDateTime deadLine) {
         this.description = description;
         this.taskStatus = taskStatus;
+        this.taskPriority = taskPriority;
+        this.issuedAt = issuedAt;
+        this.deadLine = deadLine;
     }
 }
