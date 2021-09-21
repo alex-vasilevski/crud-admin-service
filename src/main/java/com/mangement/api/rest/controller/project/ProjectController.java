@@ -53,14 +53,17 @@ public class ProjectController {
     }
 
     @PostMapping(POST_NEW_TASK_TO_PROJECT)
-    public ResponseEntity<Task> create(@NotNull @PathVariable("project_id") Long projectId, @Valid @RequestBody Task task) throws TaskCreationException {
+    public ResponseEntity<Task> create (@NotNull @PathVariable("project_id") Long projectId,
+                                        @Valid @RequestBody Task task)
+                                        throws TaskCreationException {
         logger.info("started to handle POST request on end point " + POST_NEW_TASK_TO_PROJECT);
         projectService.addTask(projectId, task);
         return ResponseEntity.created(URI.create(POST_NEW_TASK_TO_PROJECT)).build();
     }
 
     @GetMapping(GET_PROJECT_BY_ID)
-    public ResponseEntity<Project> findProjectById(@NotNull @PathVariable("project_id") Long projectId) throws ProjectNotFoundException {
+    public ResponseEntity<Project> findProjectById (@NotNull @PathVariable("project_id") Long projectId)
+                                                    throws ProjectNotFoundException {
         logger.info("started to handle GET request on end point " + GET_PROJECT_BY_ID);
         return ResponseEntity.ok(projectService.findById(projectId));
     }
@@ -73,7 +76,7 @@ public class ProjectController {
                                                                         @RequestParam(required = false, name = "employees") Set<Employee> projectEmployees,
                                                                         @RequestParam(required = false, name = "direction") String direction,
                                                                         @RequestParam(required = false, name = "sort_param") Set<String> sortParams)
-                                                                 throws ProjectNotFoundException {
+                                                                        throws ProjectNotFoundException {
         logger.info("started to handle GET request on end point " + GET_ALL_MATCHING_PROJECTS);
         Project project = new Project(name, description, projectTasks, projectEmployees, projectStatus);
         return ResponseEntity.ok(projectService.findAllMatchingAndSort(project, direction, sortParams));
@@ -96,9 +99,9 @@ public class ProjectController {
 
     @GetMapping(GET_ALL_TASKS_OF_PROJECT)
     public ResponseEntity<Page<Task>> findAllTasksInProject(@NotNull @PathVariable("project_id") Long projectId,
-                                                                @RequestParam(name = "direction", required = false) String direction,
-                                                                @RequestParam(name = "sort_param", required = false) Set<String> sortParams)
-            throws TaskNotFoundException {
+                                                            @RequestParam(name = "direction", required = false) String direction,
+                                                            @RequestParam(name = "sort_param", required = false) Set<String> sortParams)
+                                                            throws TaskNotFoundException {
 
         logger.info("started to handle GET request on end point " + GET_ALL_TASKS_OF_PROJECT);
         return ResponseEntity.ok(projectService.findAllTasksInProject(projectId, direction, sortParams));
@@ -107,7 +110,8 @@ public class ProjectController {
     @PutMapping(PUT_TASK_OF_PROJECT)
     public ResponseEntity<Task> updateTask (@NotNull @PathVariable("project_id") Long projectId,
                                             @NotNull @PathVariable("project_id") Long taskId,
-                                            @Valid @RequestBody Task source) throws TaskNotFoundException {
+                                            @Valid @RequestBody Task source)
+                                            throws TaskNotFoundException {
         logger.info("started to handle PUT request on end point " + PUT_TASK_OF_PROJECT);
         return ResponseEntity.ok(projectService.updateTask(projectId, taskId, source));
     }
