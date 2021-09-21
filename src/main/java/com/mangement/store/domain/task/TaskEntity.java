@@ -22,13 +22,13 @@ public class TaskEntity {
     @Enumerated(EnumType.STRING)
     private TaskPriority taskPriority;
     private LocalDateTime issuedAt;
-    private LocalDateTime deadLine;
+    private LocalDateTime deadline;
 
-    public TaskEntity(String description, TaskStatus taskStatus, TaskPriority taskPriority, LocalDateTime issuedAt, LocalDateTime deadLine) {
+    public TaskEntity(String description, TaskStatus taskStatus, TaskPriority taskPriority, LocalDateTime issuedAt, LocalDateTime deadline) {
         this.description = description;
         this.taskStatus = taskStatus;
         this.taskPriority = taskPriority;
         this.issuedAt = issuedAt;
-        this.deadLine = deadLine;
+        this.deadline = deadline;
     }
 }

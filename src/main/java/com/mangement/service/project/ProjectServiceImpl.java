@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
-@Transactional
 @Service
+@Transactional
 public class ProjectServiceImpl implements ProjectService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
@@ -94,3 +94,4 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
 }
+

@@ -3,11 +3,10 @@ package com.mangement.exception;
 import lombok.Getter;
 
 @Getter
-public class ProjectNotFoundException extends Exception {
-
+public class TaskCreationException extends Exception {
     private String message;
 
-    public ProjectNotFoundException(String message) {
+    public TaskCreationException(String message) {
         super(message);
         this.message = message;
     }

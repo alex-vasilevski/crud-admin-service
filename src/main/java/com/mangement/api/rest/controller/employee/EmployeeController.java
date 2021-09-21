@@ -26,7 +26,6 @@ public class EmployeeController{
 
     private static final String GET_EMPLOYEE_BY_ID = "/employees/{employee_id}";
     private static final String GET_ALL_MATCHING_EMPLOYEES = "/employees";
-    private static final String GET_ALL_MATCHING_EMPLOYEES_ON_PROJECT = "/employees/{project_id}";
     private static final String GET_ALL_EMPLOYEES_ASSIGNED_ON_PROJECT = "/employees/{project_id}";
     private static final String PUT_EMPLOYEE = "/employees/{employee_id}";
     private static final String POST_NEW_EMPLOYEE = "/employees";

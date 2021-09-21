@@ -17,4 +17,5 @@ public class PersonalInformationEntity {
     private Calendar birthDay;
     private Integer age;
     private Calendar startDay;
+    private String emailAddress;
 }

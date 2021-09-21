@@ -3,8 +3,6 @@ package com.mangement.api.dto;
 import com.mangement.store.domain.task.TaskPriority;
 import com.mangement.store.domain.task.TaskStatus;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 
 public record Task(
@@ -12,6 +10,6 @@ public record Task(
         TaskStatus taskStatus,
         TaskPriority taskPriority,
         LocalDateTime issuedAt,
-        LocalDateTime deadLine
+        LocalDateTime deadline
 ) {
 }
