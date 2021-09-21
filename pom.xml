@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com</groupId>
-	<artifactId>bank</artifactId>
+	<artifactId>management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>bank-service</name>
-	<description>bank service based on spring boot</description>
+	<name>project-management-service</name>
+	<description>project management service based on spring stack</description>
 
 	<properties>
 		<java.version>16</java.version>
