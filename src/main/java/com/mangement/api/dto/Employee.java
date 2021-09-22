@@ -12,10 +12,11 @@ public record Employee(
         Division division,
         @NotBlank(message = "employee should have a role")
         Role role,
-        PersonalInformation personalInformation) {
+        PersonalInformation personalInformation,
+        String email) {
 
         public Employee() {
-                this(null, null, null, null);
+                this(null, null, null, null, null);
         }
 
 }

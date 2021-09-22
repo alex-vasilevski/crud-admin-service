@@ -53,11 +53,12 @@ public class EmployeeController{
                                                                  @RequestParam(name = "salary", required = false) Double salary,
                                                                  @RequestParam(name = "division", required = false) Division division,
                                                                  @RequestParam (name = "role", required = false) Role role,
+                                                                 @RequestParam(name = "email", required = false) String email,
                                                                  @RequestParam(name = "direction", required = false) String direction,
                                                                  @RequestParam(name = "sort_param", required = false) Set<String> sortParams)
                                                                  throws EmployeeNotFoundException {
         logger.info("started to handle GET request on end point " + GET_ALL_MATCHING_EMPLOYEES);
-        Employee employee = new Employee(salary, division, role, personalInfo);
+        Employee employee = new Employee(salary, division, role, personalInfo, email);
         return ResponseEntity.ok(employeeService.findAllMatchingAndSort(employee, direction, sortParams));
     }
 

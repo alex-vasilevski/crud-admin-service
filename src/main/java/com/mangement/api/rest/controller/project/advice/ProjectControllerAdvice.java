@@ -2,6 +2,7 @@ package com.mangement.api.rest.controller.project.advice;
 
 import com.mangement.api.rest.controller.project.ProjectController;
 import com.mangement.exception.ProjectNotFoundException;
+import com.mangement.exception.TaskNotFoundException;
 import com.mangement.store.domain.employee.EmployeeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,13 @@ public class ProjectControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ProjectNotFoundException.class)
     public ResponseEntity<EmployeeEntity> notFound(ProjectNotFoundException e){
+        logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
+        return ResponseEntity.notFound().build();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<EmployeeEntity> notFound(TaskNotFoundException e){
         logger.info("exception "+ e.getClass().getSimpleName() +" occurred; message: " + e.getMessage());
         return ResponseEntity.notFound().build();
     }

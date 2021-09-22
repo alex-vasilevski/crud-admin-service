@@ -55,7 +55,7 @@ public class ProjectController {
     @PostMapping(POST_NEW_TASK_TO_PROJECT)
     public ResponseEntity<Task> create (@NotNull @PathVariable("project_id") Long projectId,
                                         @Valid @RequestBody Task task)
-                                        throws TaskCreationException {
+                                        throws TaskCreationException, ProjectNotFoundException {
         logger.info("started to handle POST request on end point " + POST_NEW_TASK_TO_PROJECT);
         projectService.addTask(projectId, task);
         return ResponseEntity.created(URI.create(POST_NEW_TASK_TO_PROJECT)).build();
@@ -101,7 +101,7 @@ public class ProjectController {
     public ResponseEntity<Page<Task>> findAllTasksInProject(@NotNull @PathVariable("project_id") Long projectId,
                                                             @RequestParam(name = "direction", required = false) String direction,
                                                             @RequestParam(name = "sort_param", required = false) Set<String> sortParams)
-                                                            throws TaskNotFoundException {
+                                                            throws TaskNotFoundException, ProjectNotFoundException {
 
         logger.info("started to handle GET request on end point " + GET_ALL_TASKS_OF_PROJECT);
         return ResponseEntity.ok(projectService.findAllTasksInProject(projectId, direction, sortParams));
@@ -111,20 +111,23 @@ public class ProjectController {
     public ResponseEntity<Task> updateTask (@NotNull @PathVariable("project_id") Long projectId,
                                             @NotNull @PathVariable("project_id") Long taskId,
                                             @Valid @RequestBody Task source)
-                                            throws TaskNotFoundException {
+                                            throws TaskNotFoundException, ProjectNotFoundException {
         logger.info("started to handle PUT request on end point " + PUT_TASK_OF_PROJECT);
         return ResponseEntity.ok(projectService.updateTask(projectId, taskId, source));
     }
 
     @PutMapping(PUT_PROJECT)
-    public ResponseEntity<Project> update(@NotNull @PathVariable("project_id") Long projectId, @Valid @RequestBody Project source) throws ProjectNotFoundException {
+    public ResponseEntity<Project> update(@NotNull @PathVariable("project_id") Long projectId,
+                                          @Valid @RequestBody Project source)
+                                          throws ProjectNotFoundException {
         logger.info("started to handle PUT request on end point " + PUT_PROJECT);
         return ResponseEntity.ok(projectService.update(projectId, source));
     }
 
     @DeleteMapping(DELETE_TASK_FROM_PROJECT)
     public ResponseEntity<Employee> deleteTaskById (@NotNull @PathVariable("project_id") Long projectId,
-                                                    @NotNull @PathVariable("project_id") Long taskId) {
+                                                    @NotNull @PathVariable("project_id") Long taskId)
+                                                    throws ProjectNotFoundException, TaskNotFoundException {
         logger.info("started to handle DELETE request on end point " + DELETE_TASK_FROM_PROJECT);
         projectService.deleteTaskById(projectId, taskId);
         return ResponseEntity.noContent().build();
