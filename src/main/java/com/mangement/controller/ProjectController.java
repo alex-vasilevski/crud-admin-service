@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -48,6 +49,7 @@ public class ProjectController {
     public ResponseEntity<Project> createProject(@Valid @RequestParam Project project){
         logger.info("started to handle POST request on end point " + POST_NEW_PROJECT);
         projectService.create(project);
+
         return ResponseEntity.created(URI.create(POST_NEW_PROJECT)).build();
     }
 

@@ -6,7 +6,6 @@ import com.mangement.domain.Role;
 import javax.validation.constraints.NotBlank;
 
 public record Employee(
-
         Double salary,
         @NotBlank(message = "employee should have a division")
         Division division,
@@ -15,8 +14,5 @@ public record Employee(
         PersonalInformation personalInformation,
         String email) {
 
-        public Employee() {
-                this(null, null, null, null, null);
-        }
 
 }

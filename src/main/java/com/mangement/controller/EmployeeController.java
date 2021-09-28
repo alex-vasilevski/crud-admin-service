@@ -20,16 +20,17 @@ import java.net.URI;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/employees")
 public class EmployeeController{
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
-    private static final String GET_EMPLOYEE_BY_ID = "/employees/{employee_id}";
-    private static final String GET_ALL_MATCHING_EMPLOYEES = "/employees";
-    private static final String GET_ALL_EMPLOYEES_ASSIGNED_ON_PROJECT = "/employees/{project_id}";
-    private static final String PUT_EMPLOYEE = "/employees/{employee_id}";
-    private static final String POST_NEW_EMPLOYEE = "/employees";
-    private static final String DELETE_EMPLOYEE = "/employees/{employee_id}";
+    private static final String GET_EMPLOYEE_BY_ID = "/{employee_id}";
+    private static final String GET_ALL_MATCHING_EMPLOYEES = "/";
+    private static final String GET_ALL_EMPLOYEES_ASSIGNED_ON_PROJECT = "/{project_id}";
+    private static final String PUT_EMPLOYEE = "/{employee_id}";
+    private static final String POST_NEW_EMPLOYEE = "/";
+    private static final String DELETE_EMPLOYEE = "/{employee_id}";
 
     @Autowired
     @Qualifier("employeeServiceImpl")
@@ -43,7 +44,7 @@ public class EmployeeController{
     }
 
     @GetMapping(GET_EMPLOYEE_BY_ID)
-    public ResponseEntity<Employee> findById(@NotNull @PathVariable Long id) throws EmployeeNotFoundException {
+    public ResponseEntity<Employee> findById(@NotNull @PathVariable(name = "employee_id") Long id) throws EmployeeNotFoundException {
         logger.info("started to handle GET request on end point " + GET_EMPLOYEE_BY_ID);
         return ResponseEntity.ok(employeeService.findById(id));
     }

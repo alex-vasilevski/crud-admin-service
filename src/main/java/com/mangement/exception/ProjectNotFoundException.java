@@ -3,7 +3,7 @@ package com.mangement.exception;
 import lombok.Getter;
 
 @Getter
-public class ProjectNotFoundException extends Exception {
+public class ProjectNotFoundException extends NotFoundException {
 
     private String message;
 

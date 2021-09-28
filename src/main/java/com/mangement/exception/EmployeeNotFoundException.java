@@ -3,7 +3,7 @@ package com.mangement.exception;
 import lombok.Getter;
 
 @Getter
-public class EmployeeNotFoundException extends Exception {
+public class EmployeeNotFoundException extends NotFoundException {
 
     private String message;
 
@@ -11,4 +11,5 @@ public class EmployeeNotFoundException extends Exception {
         super(message);
         this.message = message;
     }
+
 }

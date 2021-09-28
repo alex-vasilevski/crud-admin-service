@@ -3,7 +3,7 @@ package com.mangement.exception;
 import lombok.Getter;
 
 @Getter
-public class TaskNotFoundException extends Exception{
+public class TaskNotFoundException extends NotFoundException{
 
     private String message;
 

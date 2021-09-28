@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private Transformer<EmployeeEntity, Employee> transformer;
 
     @Autowired
+    private ConversionService conversionService;
+
+    @Autowired
     private PageableProducer pageableProducer;
 
     @Override
@@ -54,7 +58,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
 
-        return transformer.toDto(entity);
+        return conversionService.convert(entity, Employee.class);
+        //return transformer.toDto(entity);
     }
 
     @Override
