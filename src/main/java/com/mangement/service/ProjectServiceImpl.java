@@ -3,7 +3,7 @@ package com.mangement.service;
 import com.mangement.dto.Project;
 import com.mangement.dto.Task;
 import com.mangement.exception.TaskNotFoundException;
-import com.mangement.transformers.Transformer;
+import com.mangement.transformers.Converter;
 import com.mangement.exception.ProjectNotFoundException;
 import com.mangement.domain.ProjectEntity;
 import com.mangement.domain.TaskEntity;
@@ -35,11 +35,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     @Qualifier("projectTransformer")
-    private Transformer<ProjectEntity, Project> projectTransformer;
+    private Converter<ProjectEntity, Project> projectConverter;
 
     @Autowired
     @Qualifier("taskTransformer")
-    private Transformer<TaskEntity, Task> taskTransformer;
+    private Converter<TaskEntity, Task> taskConverter;
 
     @Autowired
     @Qualifier("taskEntityMatcher")
@@ -52,7 +52,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void create(Project project){
         logger.info("tying to create project: " + project.toString());
 
-        ProjectEntity projectEntity = projectTransformer.toEntity(project);
+        ProjectEntity projectEntity = projectConverter.toEntity(project);
 
         repository.save(projectEntity);
     }
@@ -65,13 +65,13 @@ public class ProjectServiceImpl implements ProjectService {
                 .findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("project with id " + projectId + " not found"));
 
-        return projectTransformer.toDto(entity);
+        return projectConverter.toDto(entity);
     }
 
     @Override
     public Page<Project> findAllMatchingAndSort(Project searchCriteria, String direction, Set<String> sortParams) throws ProjectNotFoundException{
         Pageable pageable = pageableProducer.produce(direction, sortParams);
-        ProjectEntity criteria = projectTransformer.toEntity(searchCriteria);
+        ProjectEntity criteria = projectConverter.toEntity(searchCriteria);
 
         logger.info("trying to find matching projects by following params: " + searchCriteria +
                 "; using sorting by params " + Arrays.toString(sortParams.toArray()) +
@@ -82,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
         if(searchResults.getTotalElements() == 0)
             throw new ProjectNotFoundException("no matching results");
 
-        return searchResults.map(projectTransformer::toDto);
+        return searchResults.map(projectConverter::toDto);
     }
 
     @Override
@@ -91,9 +91,9 @@ public class ProjectServiceImpl implements ProjectService {
 
         Optional<ProjectEntity> optional = repository.findById(projectId);
         ProjectEntity target = optional.orElseThrow(() -> new ProjectNotFoundException("project with id " + projectId + " not found"));
-        ProjectEntity source = projectTransformer.toEntity(project);
+        ProjectEntity source = projectConverter.toEntity(project);
         target = update(target, source);
-        return projectTransformer.toDto(target);
+        return projectConverter.toDto(target);
     }
 
     private ProjectEntity update(ProjectEntity source, ProjectEntity target){
@@ -115,11 +115,11 @@ public class ProjectServiceImpl implements ProjectService {
 
         Set<TaskEntity> taskEntities = projectEntity.getProjectTasks();
 
-        TaskEntity criteria = taskTransformer.toEntity(searchingCriteria);
+        TaskEntity criteria = taskConverter.toEntity(searchingCriteria);
         List<Task> filtered = taskEntities
                 .stream()
                 .filter(taskEntity -> taskEntityMatcher.isMatching(taskEntity, criteria))
-                .map(taskTransformer::toDto)
+                .map(taskConverter::toDto)
                 .collect(Collectors.toList());
 
         if (filtered.isEmpty())
@@ -139,7 +139,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<Task> tasks = projectEntity.getProjectTasks()
                 .stream()
-                .map(taskTransformer::toDto)
+                .map(taskConverter::toDto)
                 .collect(Collectors.toList());
 
         if (tasks.isEmpty())
@@ -164,10 +164,10 @@ public class ProjectServiceImpl implements ProjectService {
                 .findFirst()
                 .orElseThrow(() -> new TaskRejectedException("no task with id " + taskId + " found"));
 
-        TaskEntity sourceEntity = taskTransformer.toEntity(source);
+        TaskEntity sourceEntity = taskConverter.toEntity(source);
         targetEntity = updateTaskEntity(targetEntity, sourceEntity);
 
-        return taskTransformer.toDto(targetEntity);
+        return taskConverter.toDto(targetEntity);
     }
 
     private TaskEntity updateTaskEntity(TaskEntity target, TaskEntity source){
@@ -204,7 +204,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new ProjectNotFoundException("cannot find tasks: project with id" + projectId + " does not exist"));
 
         Set<TaskEntity> projectTasks = projectEntity.getProjectTasks();
-        projectTasks.add(taskTransformer.toEntity(task));
+        projectTasks.add(taskConverter.toEntity(task));
     }
 }
 

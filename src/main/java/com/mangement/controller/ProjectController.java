@@ -26,20 +26,22 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/projects")
 public class ProjectController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
-    private static final String GET_ALL_MATCHING_PROJECTS = "/projects";
-    private static final String GET_PROJECT_BY_ID = "/projects/{project_id}";
-    private static final String PUT_PROJECT = "/projects/{project_id}";
-    private static final String POST_NEW_PROJECT = "/projects";
+    private static final String GET_ALL_MATCHING_PROJECTS = "/";
+    private static final String GET_PROJECT_BY_ID = "/{project_id}";
+    private static final String PUT_PROJECT = "/{project_id}";
+    private static final String POST_NEW_PROJECT = "/";
 
-    private static final String GET_ALL_MATCHING_TASKS_OF_PROJECT = "projects/{project_id}/tasks";
-    private static final String GET_ALL_TASKS_OF_PROJECT = "projects/{project_id}/tasks";
-    private static final String POST_NEW_TASK_TO_PROJECT = "projects/{project_id}/tasks";
-    private static final String PUT_TASK_OF_PROJECT = "projects/{project_id}/tasks/{task_id}";
-    private static final String DELETE_TASK_FROM_PROJECT = "projects/{project_id}/tasks/{task_id}";
+    private static final String GET_ALL_MATCHING_TASKS_OF_PROJECT = "/{project_id}/tasks";
+    private static final String POST_NEW_TASK_TO_PROJECT = "/{project_id}/tasks";
+    private static final String PUT_TASK_OF_PROJECT = "/{project_id}/tasks/{task_id}";
+    private static final String DELETE_TASK_FROM_PROJECT = "/{project_id}/tasks/{task_id}";
+
+    private static final String GET_ALL_EMPLOYEES_ON_PROJECT = "/{project_id}/{employee_id}";
 
     @Autowired
     @Qualifier("projectServiceImpl")
@@ -98,15 +100,15 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.findAllMatchingTasksInProjectAndSort(projectId ,task, direction, sortParams));
     }
 
-    @GetMapping(GET_ALL_TASKS_OF_PROJECT)
-    public ResponseEntity<Page<Task>> findAllTasksInProject(@NotNull @PathVariable("project_id") Long projectId,
-                                                            @RequestParam(name = "direction", required = false) String direction,
-                                                            @RequestParam(name = "sort_param", required = false) Set<String> sortParams)
-                                                            throws TaskNotFoundException, ProjectNotFoundException {
-
-        logger.info("started to handle GET request on end point " + GET_ALL_TASKS_OF_PROJECT);
-        return ResponseEntity.ok(projectService.findAllTasksInProject(projectId, direction, sortParams));
-    }
+//    @GetMapping(GET_ALL_TASKS_OF_PROJECT)
+//    public ResponseEntity<Page<Task>> findAllTasksInProject(@NotNull @PathVariable("project_id") Long projectId,
+//                                                            @RequestParam(name = "direction", required = false) String direction,
+//                                                            @RequestParam(name = "sort_param", required = false) Set<String> sortParams)
+//                                                            throws TaskNotFoundException, ProjectNotFoundException {
+//
+//        logger.info("started to handle GET request on end point " + GET_ALL_TASKS_OF_PROJECT);
+//        return ResponseEntity.ok(projectService.findAllTasksInProject(projectId, direction, sortParams));
+//    }
 
     @PutMapping(PUT_TASK_OF_PROJECT)
     public ResponseEntity<Task> updateTask (@NotNull @PathVariable("project_id") Long projectId,

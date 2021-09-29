@@ -2,7 +2,7 @@ package com.mangement.service;
 
 import com.mangement.dto.Employee;
 import com.mangement.dto.Project;
-import com.mangement.transformers.Transformer;
+import com.mangement.transformers.Converter;
 import com.mangement.exception.ProjectNotFoundException;
 import com.mangement.domain.EmployeeEntity;
 import com.mangement.exception.EmployeeNotFoundException;
@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +32,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     @Qualifier("employeeTransformer")
-    private Transformer<EmployeeEntity, Employee> transformer;
+    private Converter<EmployeeEntity, Employee> converter;
 
-    @Autowired
-    private ConversionService conversionService;
+
 
     @Autowired
     private PageableProducer pageableProducer;
@@ -45,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void create(Employee employee) {
         logger.info("trying to create employee: " + employee.toString());
 
-        EmployeeEntity entity = transformer.toEntity(employee);
+        EmployeeEntity entity = converter.toEntity(employee);
 
         repository.save(entity);
     }
@@ -58,42 +56,34 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
 
-        return conversionService.convert(entity, Employee.class);
-        //return transformer.toDto(entity);
+        //return conversionService.convert(entity, Employee.class);
+        return converter.toDto(entity);
     }
 
     @Override
-    public Page<Employee> findAllMatchingAndSort(Employee searchCriteria, String direction, Set<String> sortParams) throws EmployeeNotFoundException {
-        Pageable pageable = pageableProducer.produce(direction, sortParams);
-        EmployeeEntity criteria = transformer.toEntity(searchCriteria);
+    public Page<Employee> findAllMatchingAndSort(Employee searchCriteria, Pageable pageable) throws EmployeeNotFoundException {
+        EmployeeEntity criteria = converter.toEntity(searchCriteria);
 
-        logger.info("trying to find matching employee by following params: " + searchCriteria +
-                "; using sorting by params " + Arrays.toString(sortParams.toArray())
-                + ", with direction: " + direction);
+        logger.info("trying to find matching employee by following params: " + searchCriteria);
 
         Page<EmployeeEntity> searchResults = repository.findAll(Example.of(criteria), pageable);
 
         if(searchResults.getTotalElements() == 0)
             throw new EmployeeNotFoundException("no matching results");
 
-        return searchResults.map(transformer::toDto);
+        return searchResults.map(converter::toDto);
     }
 
     @Override
-    public Page<Employee> findAllOnProject(Long projectId, String direction, Set<String> sortParams) throws EmployeeNotFoundException{
-        Pageable pageable = pageableProducer.produce(direction, sortParams);
+    public Page<Employee> findAllOnProject(Long projectId, Pageable pageable) throws EmployeeNotFoundException, ProjectNotFoundException {
         logger.info("trying to find all employees by on project with id " + projectId);
-        try {
-            Project project = projectService.findById(projectId);
-            List<Employee> employees = project.employees().stream().toList();
-            if (employees.isEmpty())
-                throw new EmployeeNotFoundException("no employees found on project with id " + projectId);
 
-            return new PageImpl<Employee>(employees, pageable, employees.size());
-        }
-        catch (ProjectNotFoundException e) {
-            throw new EmployeeNotFoundException("cannot find all employees, because project with id " + projectId + " does not exist");
-        }
+        Project project = projectService.findById(projectId);
+        List<Employee> employees = project.employees().stream().toList();
+        if (employees.isEmpty())
+            throw new EmployeeNotFoundException("no employees found on project with id " + projectId);
+
+        return new PageImpl<Employee>(employees, pageable, employees.size());
     }
 
     @Override
@@ -102,9 +92,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Optional<EmployeeEntity> optional = repository.findById(id);
         EmployeeEntity target = optional.orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
-        EmployeeEntity source = transformer.toEntity(employee);
+        EmployeeEntity source = converter.toEntity(employee);
         target = update(target, source);
-        return transformer.toDto(target);
+        return converter.toDto(target);
     }
 
     private EmployeeEntity update(EmployeeEntity source, EmployeeEntity target){

@@ -4,8 +4,8 @@ import com.mangement.dto.Employee;
 import com.mangement.domain.EmployeeEntity;
 import org.springframework.stereotype.Component;
 
-@Component
-public class EmployeeTransformer implements Transformer<EmployeeEntity, Employee> {
+@Component("employeeConverter")
+public class EmployeeConverter implements Converter<EmployeeEntity, Employee> {
     @Override
     public Employee toDto(EmployeeEntity employeeEntity) {
         return null;

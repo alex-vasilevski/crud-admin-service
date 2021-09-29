@@ -1,6 +1,6 @@
 package com.mangement.transformers;
 
-public interface Transformer<Entity, Dto> {
+public interface Converter<Entity, Dto> {
     Dto toDto(Entity entity);
     Entity toEntity (Dto dto);
 }

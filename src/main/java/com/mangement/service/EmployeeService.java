@@ -2,7 +2,9 @@ package com.mangement.service;
 
 import com.mangement.dto.Employee;
 import com.mangement.exception.EmployeeNotFoundException;
+import com.mangement.exception.ProjectNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Set;
 
@@ -11,9 +13,9 @@ public interface EmployeeService {
 
     Employee findById(Long id) throws EmployeeNotFoundException;
 
-    Page<Employee> findAllMatchingAndSort(Employee searchCriteria, String direction, Set<String> sortParams) throws EmployeeNotFoundException;
+    Page<Employee> findAllMatchingAndSort(Employee searchCriteria, Pageable pageable) throws EmployeeNotFoundException;
 
-    Page<Employee> findAllOnProject(Long projectId, String direction, Set<String> sortParams) throws EmployeeNotFoundException;
+    Page<Employee> findAllOnProject(Long projectId, Pageable pageable) throws EmployeeNotFoundException, ProjectNotFoundException;
 
     Employee update(Long id, Employee dto) throws EmployeeNotFoundException;
 

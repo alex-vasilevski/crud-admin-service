@@ -4,8 +4,8 @@ import com.mangement.dto.Task;
 import com.mangement.domain.TaskEntity;
 import org.springframework.stereotype.Component;
 
-@Component
-public class TaskTransformer implements Transformer<TaskEntity, Task> {
+@Component("taskConverter")
+public class TaskConverter implements Converter<TaskEntity, Task> {
     @Override
     public Task toDto(TaskEntity taskEntity) {
         return null;

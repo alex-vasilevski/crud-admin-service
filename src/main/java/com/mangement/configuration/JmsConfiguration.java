@@ -1,5 +1,7 @@
-package com.mangement.jms;
+package com.mangement.configuration;
 
+import com.mangement.jms.EmployeeErrorHandler;
+import com.mangement.jms.EmployeeValidator;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
