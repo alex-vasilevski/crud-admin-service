@@ -11,8 +11,7 @@ public record Employee(
         Division division,
         @NotBlank(message = "employee should have a role")
         Role role,
-        PersonalInformation personalInformation,
-        String email) {
+        PersonalInformation personalInformation) {
 
 
 }

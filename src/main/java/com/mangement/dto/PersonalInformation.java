@@ -17,7 +17,8 @@ public record PersonalInformation(
         @Min(value = 18, message = "minimum employees age is 18")
         @Max(value = 60, message = "maximum employees age is 60")
         Integer age,
-        Calendar startDay) {
+        Calendar startDay,
+        String emailAddress) {
 
 
 }

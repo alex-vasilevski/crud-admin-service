@@ -1,23 +1,23 @@
 package com.mangement.service;
 
-import com.mangement.transformers.Converter;
+import com.mangement.converters.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class ConversionServiceImpl implements ConversionService {
 
-    private ConvertorsRegistry registry;
+    @Autowired
+    private Set<Converter> converters;
 
     @Override
-    public boolean canConvert(Class<?> target, Class<?> source) {
-        return false;
+    public boolean canConvert(Class<?> source, Class<?> target) {
+        return converters.stream().anyMatch(converter -> converter.canConvert(target, source));
     }
 
     @Override
@@ -26,7 +26,17 @@ public class ConversionServiceImpl implements ConversionService {
     }
 
     @Override
-    public <T> T convert(Object o, Class<T> aClass) {
+    public <T> T convert(Object o, Class<T> target) {
+        Optional<Converter> optional = converters
+                .stream()
+                .filter(converter -> converter.canConvert(o, target))
+                .findFirst();
+
+        if (optional.isPresent()){
+            Converter converter = optional.get();
+            return converter.convert(o, target);
+        }
+
         return null;
     }
 

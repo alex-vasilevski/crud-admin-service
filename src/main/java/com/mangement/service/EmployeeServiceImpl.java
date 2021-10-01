@@ -2,7 +2,7 @@ package com.mangement.service;
 
 import com.mangement.dto.Employee;
 import com.mangement.dto.Project;
-import com.mangement.transformers.Converter;
+import com.mangement.converters.Converter;
 import com.mangement.exception.ProjectNotFoundException;
 import com.mangement.domain.EmployeeEntity;
 import com.mangement.exception.EmployeeNotFoundException;
@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +32,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository repository;
 
     @Autowired
-    @Qualifier("employeeTransformer")
-    private Converter<EmployeeEntity, Employee> converter;
-
-
+    @Qualifier("conversionServiceImpl")
+    private ConversionService conversionService;
 
     @Autowired
     private PageableProducer pageableProducer;
@@ -43,7 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void create(Employee employee) {
         logger.info("trying to create employee: " + employee.toString());
 
-        EmployeeEntity entity = converter.toEntity(employee);
+        EmployeeEntity entity = conversionService.convert(employee, EmployeeEntity.class);
 
         repository.save(entity);
     }
@@ -56,8 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("employee with id " + id + " not found"));
 
-        //return conversionService.convert(entity, Employee.class);
-        return converter.toDto(entity);
+        return conversionService.convert(entity, Employee.class);
     }
 
     @Override

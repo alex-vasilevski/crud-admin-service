@@ -3,7 +3,7 @@ package com.mangement.service;
 import com.mangement.dto.Project;
 import com.mangement.dto.Task;
 import com.mangement.exception.TaskNotFoundException;
-import com.mangement.transformers.Converter;
+import com.mangement.converters.Converter;
 import com.mangement.exception.ProjectNotFoundException;
 import com.mangement.domain.ProjectEntity;
 import com.mangement.domain.TaskEntity;
@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.task.TaskRejectedException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -34,12 +35,8 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectRepository repository;
 
     @Autowired
-    @Qualifier("projectTransformer")
-    private Converter<ProjectEntity, Project> projectConverter;
-
-    @Autowired
-    @Qualifier("taskTransformer")
-    private Converter<TaskEntity, Task> taskConverter;
+    @Qualifier("conversionServiceImpl")
+    ConversionService conversionService;
 
     @Autowired
     @Qualifier("taskEntityMatcher")
